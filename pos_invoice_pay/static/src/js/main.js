@@ -255,6 +255,14 @@ models.PosModel = models.PosModel.extend({
             args: [id]
         });
     },
+    validate_invoice_pos: function (id) {
+        var result = $.Deferred();
+        return rpc.query({
+            model: 'account.invoice',
+            method: 'invoice_pos',
+            args: [id]
+        });
+    },
 
     get_invoices_to_render: function (invoices) {
         var self = this,
@@ -1127,6 +1135,9 @@ var InvoiceReceiptScreenWidget = screens.ReceiptScreenWidget.extend({
         this.$('.change-value').html(this.format_currency(order.invoice_to_pay.get_change()));
     },
     click_next: function() {
+        var invoice = this.pos.db.invoices[0].id
+        this.pos.validate_invoice_pos(invoice)
+
         this.gui.show_screen('products');
     },
 });
